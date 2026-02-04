@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐶 A Special Birthday Surprise! 🐶</title>
+    <title>🐶 MEGA BIRTHDAY SURPRISE 🐶</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
         :root {
             --primary: #ff4757;
-            --card-white: #ffffff;
-            --bg-gradient: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #ff9a9e);
+            --envelope-color: #f06292;
+            --envelope-dark: #d81b60;
+            --bg-gradient: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a1c4fd, #c2e9fb);
         }
 
         body {
@@ -25,7 +26,7 @@
             animation: gradientBG 15s ease infinite;
             font-family: 'Poppins', sans-serif;
             overflow: hidden;
-            perspective: 2000px; /* Essential for 3D */
+            perspective: 2500px;
         }
 
         @keyframes gradientBG {
@@ -34,39 +35,48 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* ENVELOPE STYLES */
-        .envelope-wrapper {
+        /* CONTAINER */
+        .stage {
             position: relative;
-            width: 300px;
-            height: 200px;
-            cursor: pointer;
-            z-index: 10;
-            transition: transform 0.5s;
+            width: 450px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .envelope-wrapper.open {
-            transform: translateY(150px); /* Move down to make room for big card */
-            pointer-events: none;
+        /* ENVELOPE - Task 1 & 3: Bigger & Moves Down */
+        .envelope-wrapper {
+            position: relative;
+            width: 450px;
+            height: 300px;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .envelope-wrapper.is-open {
+            transform: translateY(180px); /* Moves envelope down */
         }
 
         .envelope {
             position: relative;
             width: 100%;
             height: 100%;
-            background: #f06292;
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            background: var(--envelope-color);
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
         }
 
-        .envelope::before {
+        .envelope::after {
             content: "";
             position: absolute;
             z-index: 2;
-            border-top: 100px solid transparent;
-            border-left: 150px solid #d81b60;
-            border-right: 150px solid #d81b60;
-            border-bottom: 100px solid #c2185b;
-            border-radius: 0 0 10px 10px;
+            border-top: 150px solid transparent;
+            border-left: 225px solid var(--envelope-dark);
+            border-right: 225px solid var(--envelope-dark);
+            border-bottom: 150px solid #b3144d;
+            border-radius: 0 0 15px 15px;
         }
 
         .flap {
@@ -74,92 +84,92 @@
             top: 0;
             width: 0;
             height: 0;
-            border-left: 150px solid transparent;
-            border-right: 150px solid transparent;
-            border-top: 100px solid #f06292;
+            border-left: 225px solid transparent;
+            border-right: 225px solid transparent;
+            border-top: 160px solid var(--envelope-color);
             transform-origin: top;
             transition: transform 0.6s ease;
             z-index: 3;
         }
 
-        .open .flap { transform: rotateX(180deg); }
+        .is-open .flap { transform: rotateX(180deg); z-index: 1; }
 
-        /* THE FOLDABLE CARD */
+        /* THE CARD - Task 1 & 2: Bigger & On Top */
         .card-container {
             position: absolute;
-            width: 500px; /* Large width */
-            height: 350px;
+            width: 700px; /* Massive width */
+            height: 450px;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.1);
+            transform: translate(-50%, -50%) scale(0) rotateX(20deg);
             opacity: 0;
             display: flex;
-            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 1;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100; /* Task 2: Always on top */
             transform-style: preserve-3d;
+            pointer-events: none;
         }
 
-        .open + .card-container {
+        .is-open + .card-container {
             opacity: 1;
-            transform: translate(-50%, -100%) scale(1); /* Rises up */
-            animation: floatBob 3s ease-in-out infinite 1s; /* Subtle bobbing */
+            transform: translate(-50%, -110%) scale(1) rotateX(0deg);
+            pointer-events: auto;
+            animation: immersiveFloat 4s ease-in-out infinite 1s;
         }
 
-        @keyframes floatBob {
-            0%, 100% { transform: translate(-50%, -100%) rotateX(5deg) rotateY(-5deg); }
-            50% { transform: translate(-50%, -110%) rotateX(-5deg) rotateY(5deg); }
+        @keyframes immersiveFloat {
+            0%, 100% { transform: translate(-50%, -110%) rotateY(-2deg) rotateX(2deg); }
+            50% { transform: translate(-50%, -115%) rotateY(2deg) rotateX(-2deg); }
         }
 
-        /* Left and Right Panels */
         .panel {
             flex: 1;
             height: 100%;
             background: white;
-            padding: 30px;
+            padding: 40px;
             box-sizing: border-box;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 1px solid #eee;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border: 1px solid #f0f0f0;
         }
 
         .left-panel {
-            border-radius: 15px 0 0 15px;
+            border-radius: 20px 0 0 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
             background: #fffafa;
-            border-right: 1px dashed #ccc;
+            border-right: 2px dashed #ffccd5;
         }
 
         .right-panel {
-            border-radius: 0 15px 15px 0;
+            border-radius: 0 20px 20px 0;
             transform-origin: left;
-            transform: rotateY(-170deg); /* Folded state */
-            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1) 1s;
+            transform: rotateY(-175deg);
+            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1) 0.5s;
             backface-visibility: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        .open + .card-container .right-panel {
+        .is-open + .card-container .right-panel {
             transform: rotateY(0deg); /* Unfolds */
         }
 
-        /* Content Styles */
+        /* CONTENT */
         .left-panel img {
-            width: 140px;
-            height: 140px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
-            border: 5px solid var(--primary);
+            border: 8px solid var(--primary);
             object-fit: cover;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .left-panel h2 {
             font-family: 'Dancing Script', cursive;
-            font-size: 32px;
+            font-size: 42px;
             color: var(--primary);
             margin: 0;
         }
@@ -167,123 +177,112 @@
         .date-tag {
             background: var(--primary);
             color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            margin-top: 10px;
+            padding: 8px 25px;
+            border-radius: 30px;
+            font-size: 18px;
+            margin-top: 15px;
+            font-weight: bold;
         }
 
         .right-panel p {
-            font-size: 15px;
-            line-height: 1.6;
-            color: #444;
-            margin-bottom: 15px;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #333;
         }
 
         .signature {
             text-align: right;
             font-family: 'Dancing Script', cursive;
-            font-size: 22px;
+            font-size: 28px;
             color: var(--primary);
         }
 
-        /* Particle Emojis */
+        /* EXTRAS */
+        .hint-text {
+            position: absolute;
+            bottom: -70px;
+            width: 100%;
+            text-align: center;
+            color: #d81b60;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
         .particle {
             position: fixed;
             pointer-events: none;
-            z-index: 100;
-            font-size: 24px;
-            animation: floatUp 4s ease-out forwards;
+            z-index: 200;
+            font-size: 30px;
+            animation: floatUp 4s linear forwards;
         }
 
         @keyframes floatUp {
             0% { transform: translateY(0) rotate(0deg); opacity: 1; }
             100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
         }
-
-        .click-hint {
-            position: absolute;
-            bottom: -50px;
-            width: 100%;
-            text-align: center;
-            color: white;
-            font-weight: bold;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
     </style>
 </head>
 <body>
 
-    <div class="envelope-wrapper" id="env" onclick="openAll()">
-        <div class="flap"></div>
-        <div class="envelope"></div>
-        <div class="click-hint">CLICK TO OPEN 🐶</div>
-    </div>
-
-    <div class="card-container" id="card">
-        <div class="panel left-panel">
-            <img src="photo.jpg" alt="Birthday Person">
-            <h2>Happy Birthday!</h2>
-            <div class="date-tag">5th February</div>
+    <div class="stage" onclick="toggleBirthday()">
+        <div class="envelope-wrapper" id="env">
+            <div class="flap"></div>
+            <div class="envelope"></div>
+            <div class="hint-text" id="hint">CLICK ME PLEASEEEE 🐶</div>
         </div>
-        
-        <div class="panel right-panel">
-            <div>
-                <p>To my favorite human,</p>
-                <p>I wanted to send something as unique and special as you are. May your day be filled with endless joy, laughter, and maybe a few treats!</p>
-                <p>You deserve the world today and every day. Stay amazing!</p>
+
+        <div class="card-container" id="card">
+            <div class="panel left-panel">
+                <img src="https://via.placeholder.com/200" alt="Birthday Star">
+                <h2>Happy Birthday Wakonya!</h2>
+                <div class="date-tag">5th February</div>
             </div>
-            <div class="signature">With love, Darkhan 🐾</div>
+            
+            <div class="panel right-panel">
+                <div>
+                    <p>To my favorite person,</p>
+                    <p>On your special day, I wanted to create something as big and vibrant as your personality! May this year bring you as much happiness as you bring to everyone around you.</p>
+                    <div class="signature">With love, Darkhan 🐾</div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        function openAll() {
+        let isOpen = false;
+        let particleInterval;
+
+        function toggleBirthday() {
             const env = document.getElementById('env');
-            env.classList.add('open');
+            const hint = document.getElementById('hint');
             
-            // Trigger Confetti
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
+            isOpen = !isOpen;
 
-            // Continuous Confetti for "Crazy Cool" effect
-            setTimeout(() => {
-                var end = Date.now() + (10 * 1000);
-                (function frame() {
-                    confetti({
-                        particleCount: 2,
-                        angle: 60,
-                        spread: 55,
-                        origin: { x: 0 },
-                        colors: ['#ff4757', '#ffffff', '#ffa502']
-                    });
-                    confetti({
-                        particleCount: 2,
-                        angle: 120,
-                        spread: 55,
-                        origin: { x: 1 },
-                        colors: ['#ff4757', '#ffffff', '#ffa502']
-                    });
-                    if (Date.now() < end) {
-                        requestAnimationFrame(frame);
-                    }
-                }());
-            }, 1000);
+            if (isOpen) {
+                env.classList.add('is-open');
+                hint.innerText = "Click to Close 🐾";
+                
+                // Boom! Confetti
+                confetti({
+                    particleCount: 200,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#ff4757', '#ffffff', '#ffa502', '#f06292']
+                });
 
-            // Floating Dogs & Flowers
-            setInterval(createParticle, 300);
+                // Start Dog/Flower Rain
+                particleInterval = setInterval(createParticle, 300);
+            } else {
+                env.classList.remove('is-open');
+                hint.innerText = "Click to Open 🐶";
+                clearInterval(particleInterval);
+            }
         }
 
         function createParticle() {
-            const items = ['🐶', '🌸', '🦴', '🌺', '🐾', '✨', '🐕'];
+            if (!isOpen) return;
+            const items = ['🐶', '🌸', '🐾', '🌺', '🦴', '✨', '🐩', '🐕'];
             const p = document.createElement('div');
             p.className = 'particle';
             p.innerText = items[Math.floor(Math.random() * items.length)];
