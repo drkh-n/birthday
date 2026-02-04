@@ -35,20 +35,21 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* CONTAINER */
+        /* STAGE CONTAINER */
         .stage {
             position: relative;
-            width: 450px;
-            height: 300px;
+            width: 100%;
+            max-width: 450px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* ENVELOPE - Task 1 & 3: Bigger & Moves Down */
+        /* ENVELOPE */
         .envelope-wrapper {
             position: relative;
-            width: 450px;
+            width: 90vw;
+            max-width: 450px;
             height: 300px;
             cursor: pointer;
             z-index: 10;
@@ -56,7 +57,7 @@
         }
 
         .envelope-wrapper.is-open {
-            transform: translateY(180px); /* Moves envelope down */
+            transform: translateY(200px);
         }
 
         .envelope {
@@ -73,10 +74,18 @@
             position: absolute;
             z-index: 2;
             border-top: 150px solid transparent;
-            border-left: 225px solid var(--envelope-dark);
-            border-right: 225px solid var(--envelope-dark);
+            border-left: 45vw solid var(--envelope-dark);
+            border-right: 45vw solid var(--envelope-dark);
             border-bottom: 150px solid #b3144d;
             border-radius: 0 0 15px 15px;
+        }
+
+        /* Adjusting envelope flaps for Desktop */
+        @media (min-width: 500px) {
+            .envelope::after {
+                border-left-width: 225px;
+                border-right-width: 225px;
+            }
         }
 
         .flap {
@@ -84,151 +93,143 @@
             top: 0;
             width: 0;
             height: 0;
-            border-left: 225px solid transparent;
-            border-right: 225px solid transparent;
+            border-left: 45vw solid transparent;
+            border-right: 45vw solid transparent;
             border-top: 160px solid var(--envelope-color);
             transform-origin: top;
             transition: transform 0.6s ease;
             z-index: 3;
         }
 
+        @media (min-width: 500px) {
+            .flap {
+                border-left-width: 225px;
+                border-right-width: 225px;
+            }
+        }
+
         .is-open .flap { transform: rotateX(180deg); z-index: 1; }
 
-        /* THE CARD - Task 1 & 2: Bigger & On Top */
+        /* THE CARD */
         .card-container {
             position: absolute;
-            width: 700px; /* Massive width */
-            height: 450px;
+            width: 90vw;
+            max-width: 700px;
+            height: auto;
+            min-height: 450px;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0) rotateX(20deg);
+            transform: translate(-50%, -50%) scale(0);
             opacity: 0;
             display: flex;
+            flex-direction: column; /* Stacked for mobile by default */
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 100; /* Task 2: Always on top */
+            z-index: 100;
             transform-style: preserve-3d;
             pointer-events: none;
         }
 
+        /* Desktop Layout for Card */
+        @media (min-width: 768px) {
+            .card-container {
+                flex-direction: row;
+                height: 450px;
+            }
+        }
+
         .is-open + .card-container {
             opacity: 1;
-            transform: translate(-50%, -110%) scale(1) rotateX(0deg);
+            transform: translate(-50%, -115%) scale(1);
             pointer-events: auto;
             animation: immersiveFloat 4s ease-in-out infinite 1s;
         }
 
         @keyframes immersiveFloat {
-            0%, 100% { transform: translate(-50%, -110%) rotateY(-2deg) rotateX(2deg); }
-            50% { transform: translate(-50%, -115%) rotateY(2deg) rotateX(-2deg); }
+            0%, 100% { transform: translate(-50%, -115%) rotateY(-2deg); }
+            50% { transform: translate(-50%, -120%) rotateY(2deg); }
         }
 
         .panel {
             flex: 1;
-            height: 100%;
             background: white;
-            padding: 40px;
+            padding: 30px;
             box-sizing: border-box;
             box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            border: 1px solid #f0f0f0;
         }
 
         .left-panel {
-            border-radius: 20px 0 0 20px;
+            border-radius: 20px 20px 0 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             background: #fffafa;
-            border-right: 2px dashed #ffccd5;
         }
 
         .right-panel {
-            border-radius: 0 20px 20px 0;
-            transform-origin: left;
-            transform: rotateY(-175deg);
-            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1) 0.5s;
-            backface-visibility: hidden;
+            border-radius: 0 0 20px 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        .is-open + .card-container .right-panel {
-            transform: rotateY(0deg); /* Unfolds */
+        /* Desktop Panel Radii & Folding */
+        @media (min-width: 768px) {
+            .left-panel { border-radius: 20px 0 0 20px; border-right: 2px dashed #ffccd5; }
+            .right-panel { 
+                border-radius: 0 20px 20px 0; 
+                transform-origin: left;
+                transform: rotateY(-175deg);
+                transition: transform 1s ease 0.5s;
+                backface-visibility: hidden;
+            }
+            .is-open + .card-container .right-panel { transform: rotateY(0deg); }
         }
 
-        /* CONTENT */
+        /* CONTENT SCALING */
         .left-panel img {
-            width: 200px;
-            height: 200px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            border: 8px solid var(--primary);
+            border: 5px solid var(--primary);
             object-fit: cover;
-            margin-bottom: 20px;
         }
 
-        .left-panel h2 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 42px;
-            color: var(--primary);
-            margin: 0;
+        @media (min-width: 768px) {
+            .left-panel img { width: 180px; height: 180px; }
         }
 
-        .date-tag {
-            background: var(--primary);
-            color: white;
-            padding: 8px 25px;
-            border-radius: 30px;
-            font-size: 18px;
-            margin-top: 15px;
-            font-weight: bold;
+        .left-panel h2 { font-family: 'Dancing Script', cursive; font-size: 28px; color: var(--primary); margin: 10px 0; }
+        .date-tag { background: var(--primary); color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px; }
+
+        .right-panel p { font-size: 14px; line-height: 1.5; color: #333; }
+        @media (min-width: 768px) {
+            .right-panel p { font-size: 17px; }
+            .left-panel h2 { font-size: 40px; }
         }
 
-        .right-panel p {
-            font-size: 18px;
-            line-height: 1.8;
-            color: #333;
-        }
-
-        .signature {
-            text-align: right;
-            font-family: 'Dancing Script', cursive;
-            font-size: 28px;
-            color: var(--primary);
-        }
-
-        /* EXTRAS */
-        .hint-text {
-            position: absolute;
-            bottom: -70px;
-            width: 100%;
-            text-align: center;
-            color: #d81b60;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
+        /* BIG PARTICLES */
         .particle {
             position: fixed;
             pointer-events: none;
             z-index: 200;
-            /* Increased base size and added a shadow for depth */
-            font-size: 60px; 
             filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
             animation: floatUp 4s linear forwards;
         }
 
         @keyframes floatUp {
-            0% { 
-                transform: translateY(0) translateX(0) rotate(0deg); 
-                opacity: 1; 
-            }
-            100% { 
-                /* The var(--drift) comes from the JS above */
-                transform: translateY(-110vh) translateX(var(--drift, 100px)) rotate(360deg); 
-                opacity: 0; 
-            }
+            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-110vh) translateX(var(--drift)) rotate(360deg); opacity: 0; }
+        }
+
+        .hint-text {
+            position: absolute;
+            bottom: -60px;
+            width: 100%;
+            text-align: center;
+            color: #d81b60;
+            font-weight: bold;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -238,13 +239,13 @@
         <div class="envelope-wrapper" id="env">
             <div class="flap"></div>
             <div class="envelope"></div>
-            <div class="hint-text" id="hint">CLICK ME PLEASEEEE 🐶</div>
+            <div class="hint-text" id="hint">TAP ME 🐶</div>
         </div>
 
         <div class="card-container" id="card">
             <div class="panel left-panel">
                 <img src="photo.jpg" alt="Birthday Star">
-                <h2>Happy Birthday Wakonya!</h2>
+                <h2>Happy Birthday Wakonya! 😝</h2>
                 <div class="date-tag">5th February</div>
             </div>
             
@@ -252,7 +253,7 @@
                 <div>
                     <p>To my favorite person,</p>
                     <p>On your special day, I wanted to create something as big and vibrant as your personality! May this year bring you as much happiness as you bring to everyone around you.</p>
-                    <div class="signature">With love, Darkhan 🐾</div>
+                    <div class="signature" style="text-align: right; font-family: 'Dancing Script', cursive; font-size: 24px; color: #ff4757;">With love, Darkhan 🐾</div>
                 </div>
             </div>
         </div>
@@ -265,26 +266,16 @@
         function toggleBirthday() {
             const env = document.getElementById('env');
             const hint = document.getElementById('hint');
-            
             isOpen = !isOpen;
 
             if (isOpen) {
                 env.classList.add('is-open');
-                hint.innerText = "Click to Close 🐾";
-                
-                // Boom! Confetti
-                confetti({
-                    particleCount: 200,
-                    spread: 80,
-                    origin: { y: 0.6 },
-                    colors: ['#ff4757', '#ffffff', '#ffa502', '#f06292']
-                });
-
-                // Start Dog/Flower Rain
+                hint.innerText = "TAP TO CLOSE 🐾";
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
                 particleInterval = setInterval(createParticle, 300);
             } else {
                 env.classList.remove('is-open');
-                hint.innerText = "CLICK ME PLEASEEEE 🐶";
+                hint.innerText = "TAP ME 🐶";
                 clearInterval(particleInterval);
             }
         }
@@ -296,15 +287,14 @@
             p.className = 'particle';
             p.innerText = items[Math.floor(Math.random() * items.length)];
             
-            // --- NEW: Randomize Size ---
-            const randomSize = Math.floor(Math.random() * 60) + 40; // Sizes between 40px and 100px
-            p.style.fontSize = randomSize + 'px';
-            
+            // RANDOM BIG SIZES
+            const size = Math.floor(Math.random() * 50) + 40; 
+            p.style.fontSize = size + 'px';
             p.style.left = Math.random() * 100 + 'vw';
             p.style.top = '100vh';
             
-            // Randomize horizontal drift for more "liveliness"
-            p.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+            // RANDOM DRIFT
+            p.style.setProperty('--drift', (Math.random() * 400 - 200) + 'px');
             
             document.body.appendChild(p);
             setTimeout(() => p.remove(), 4000);
