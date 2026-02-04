@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Surprise!</title>
+    <style>
+        :root {
+            --bg-color: #fce4ec;
+            --envelope-color: #f06292;
+            --envelope-dark: #d81b60;
+            --card-color: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        /* The Envelope Container */
+        .envelope-wrapper {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .envelope-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        .envelope {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background-color: var(--envelope-color);
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Front Flaps */
+        .envelope::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            z-index: 2;
+            border-top: 100px solid transparent;
+            border-left: 150px solid var(--envelope-dark);
+            border-right: 150px solid var(--envelope-dark);
+            border-bottom: 100px solid var(--envelope-dark);
+            border-radius: 10px;
+        }
+
+        /* Top Flap */
+        .flap {
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid var(--envelope-color);
+            transform-origin: top;
+            transition: transform 0.6s ease;
+            z-index: 3;
+        }
+
+        /* The Hidden Card */
+        .card {
+            position: absolute;
+            bottom: 10px;
+            left: 25px;
+            width: 250px;
+            height: 180px;
+            background: var(--card-color);
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.8s ease, bottom 0.8s ease;
+            z-index: 1;
+            box-sizing: border-box;
+        }
+
+        .card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--envelope-color);
+        }
+
+        .card h2 {
+            margin: 10px 0 5px;
+            color: var(--envelope-dark);
+            font-size: 1.2rem;
+        }
+
+        /* Click Action */
+        .envelope-wrapper.open .flap {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-wrapper.open .card {
+            transform: translateY(-120px);
+            z-index: 4;
+        }
+
+        /* Surprise Elements */
+        .flower {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .open .flower {
+            animation: floatUp 3s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-400px) rotate(360deg); opacity: 0; }
+        }
+
+        .instruction {
+            position: absolute;
+            bottom: -40px;
+            width: 100%;
+            text-align: center;
+            color: var(--envelope-dark);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="envelope-wrapper" onclick="openEnvelope(this)">
+        <div class="flap"></div>
+        <div class="envelope"></div>
+        <div class="card">
+            <img src="https://via.placeholder.com/150" alt="Birthday Person" id="person-img">
+            <h2>Happy Birthday!</h2>
+            <p>You're amazing! 🌸</p>
+        </div>
+        <div class="instruction">Click Me!</div>
+    </div>
+
+    <script>
+        function openEnvelope(el) {
+            el.classList.add('open');
+            document.querySelector('.instruction').style.display = 'none';
+            
+            // Create flowers
+            for(let i=0; i<15; i++) {
+                createFlower();
+            }
+        }
+
+        function createFlower() {
+            const flowers = ['🌸', '🌼', '🌻', '🌺', '✨'];
+            const f = document.createElement('div');
+            f.className = 'flower';
+            f.innerText = flowers[Math.floor(Math.random() * flowers.length)];
+            f.style.left = Math.random() * 100 + 'vw';
+            f.style.top = '80vh';
+            f.style.left = (Math.random() * 300) + (window.innerWidth/2 - 150) + 'px';
+            document.body.appendChild(f);
+            
+            // Random horizontal drift
+            f.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+        }
+    </script>
+</body>
+</html>
