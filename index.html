@@ -3,177 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Special Surprise!</title>
+    <title>🎉 MEGA BIRTHDAY SURPRISE 🎉</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <style>
         :root {
-            --bg-color: #fce4ec;
-            --envelope-color: #f06292;
-            --envelope-dark: #d81b60;
-            --card-color: #ffffff;
+            --primary: #ff4757;
+            --secondary: #ff6b81;
+            --accent: #ffa502;
+            --bg-gradient: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
         }
 
         body {
-            background-color: var(--bg-color);
+            margin: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Arial', sans-serif;
+            background: var(--bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Poppins', sans-serif;
             overflow: hidden;
         }
 
-        /* The Envelope Container */
-        .envelope-wrapper {
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.3s;
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        .envelope-wrapper:hover {
-            transform: scale(1.05);
+        /* The Envelope Container */
+        .envelope-container {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        /* Pulse animation for the envelope */
+        .envelope-container.waiting {
+            animation: envelopeShake 2s infinite;
+        }
+
+        @keyframes envelopeShake {
+            0%, 100% { transform: scale(1) rotate(0); }
+            10%, 20% { transform: scale(1.05) rotate(-2deg); }
+            30%, 50%, 70% { transform: scale(1.05) rotate(2deg); }
+            40%, 60%, 80% { transform: scale(1.05) rotate(-2deg); }
         }
 
         .envelope {
             position: relative;
-            width: 300px;
-            height: 200px;
-            background-color: var(--envelope-color);
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            z-index: 10;
         }
 
-        /* Front Flaps */
         .envelope::before {
             content: "";
             position: absolute;
-            top: 0;
-            z-index: 2;
-            border-top: 100px solid transparent;
-            border-left: 150px solid var(--envelope-dark);
-            border-right: 150px solid var(--envelope-dark);
-            border-bottom: 100px solid var(--envelope-dark);
-            border-radius: 10px;
+            z-index: 20;
+            border-top: 110px solid transparent;
+            border-left: 160px solid #f0f0f0;
+            border-right: 160px solid #f0f0f0;
+            border-bottom: 110px solid #e0e0e0;
+            border-radius: 0 0 10px 10px;
         }
 
-        /* Top Flap */
         .flap {
             position: absolute;
             top: 0;
             width: 0;
             height: 0;
-            border-left: 150px solid transparent;
-            border-right: 150px solid transparent;
-            border-top: 100px solid var(--envelope-color);
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 120px solid #ffffff;
             transform-origin: top;
-            transition: transform 0.6s ease;
-            z-index: 3;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 30;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));
         }
 
-        /* The Hidden Card */
+        /* Wax Seal */
+        .seal {
+            position: absolute;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background: #b71c1c;
+            border-radius: 50%;
+            z-index: 40;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: gold;
+            font-size: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: opacity 0.3s;
+        }
+
+        /* The Birthday Card */
         .card {
             position: absolute;
-            bottom: 10px;
-            left: 25px;
-            width: 250px;
-            height: 180px;
-            background: var(--card-color);
-            border-radius: 5px;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            height: 200px;
+            background: white;
+            border-radius: 10px;
             padding: 20px;
-            text-align: center;
-            transition: transform 0.8s ease, bottom 0.8s ease;
-            z-index: 1;
             box-sizing: border-box;
+            text-align: center;
+            transition: all 1s ease;
+            z-index: 5;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
 
         .card img {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
+            border: 4px solid var(--primary);
             object-fit: cover;
-            border: 3px solid var(--envelope-color);
+            margin-bottom: 10px;
         }
 
-        .card h2 {
-            margin: 10px 0 5px;
-            color: var(--envelope-dark);
-            font-size: 1.2rem;
+        .card h1 {
+            font-family: 'Dancing Script', cursive;
+            margin: 0;
+            color: var(--primary);
+            font-size: 24px;
         }
 
-        /* Click Action */
-        .envelope-wrapper.open .flap {
+        /* Open State Styles */
+        .open .flap {
             transform: rotateX(180deg);
+            z-index: 5;
         }
 
-        .envelope-wrapper.open .card {
-            transform: translateY(-120px);
-            z-index: 4;
+        .open .card {
+            transform: translate(-50%, -150px) scale(1.2);
+            z-index: 50;
         }
 
-        /* Surprise Elements */
-        .flower {
-            position: absolute;
-            font-size: 2rem;
+        .open .seal {
             opacity: 0;
-            pointer-events: none;
         }
 
-        .open .flower {
-            animation: floatUp 3s ease-out forwards;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-400px) rotate(360deg); opacity: 0; }
-        }
-
-        .instruction {
+        .click-text {
             position: absolute;
-            bottom: -40px;
+            bottom: -50px;
             width: 100%;
             text-align: center;
-            color: var(--envelope-dark);
-            font-weight: bold;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Particle Flower Style */
+        .flower-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 100;
+            font-size: 24px;
+            animation: floatAndFade 4s ease-out forwards;
+        }
+
+        @keyframes floatAndFade {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div class="envelope-wrapper" onclick="openEnvelope(this)">
+    <div class="envelope-container waiting" id="envelope" onclick="celebrate()">
         <div class="flap"></div>
+        <div class="seal">❤</div>
         <div class="envelope"></div>
         <div class="card">
-            <img src="https://via.placeholder.com/150" alt="Birthday Person" id="person-img">
-            <h2>Happy Birthday!</h2>
-            <p>You're amazing! 🌸</p>
+            <img src="https://via.placeholder.com/150" alt="Special Someone">
+            <h1>Happy Birthday!</h1>
+            <p style="font-size: 14px; color: #666;">You make the world brighter just by being in it! ✨</p>
         </div>
-        <div class="instruction">Click Me!</div>
+        <div class="click-text">Click to Open</div>
     </div>
 
     <script>
-        function openEnvelope(el) {
-            el.classList.add('open');
-            document.querySelector('.instruction').style.display = 'none';
+        function celebrate() {
+            const env = document.getElementById('envelope');
             
-            // Create flowers
-            for(let i=0; i<15; i++) {
-                createFlower();
+            // Only trigger if not already open
+            if (!env.classList.contains('open')) {
+                env.classList.remove('waiting');
+                env.classList.add('open');
+                document.querySelector('.click-text').style.display = 'none';
+
+                // 1. Confetti Explosion
+                const duration = 15 * 1000;
+                const animationEnd = Date.now() + duration;
+                const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+                const randomInRange = (min, max) => Math.random() * (max - min) + min;
+
+                const interval = setInterval(function() {
+                    const timeLeft = animationEnd - Date.now();
+
+                    if (timeLeft <= 0) {
+                        return clearInterval(interval);
+                    }
+
+                    const particleCount = 50 * (timeLeft / duration);
+                    confetti({...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }});
+                    confetti({...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }});
+                }, 250);
+
+                // 2. Extra Flower Rain
+                for(let i=0; i<20; i++) {
+                    setTimeout(createFlower, i * 100);
+                }
             }
         }
 
         function createFlower() {
-            const flowers = ['🌸', '🌼', '🌻', '🌺', '✨'];
-            const f = document.createElement('div');
-            f.className = 'flower';
-            f.innerText = flowers[Math.floor(Math.random() * flowers.length)];
-            f.style.left = Math.random() * 100 + 'vw';
-            f.style.top = '80vh';
-            f.style.left = (Math.random() * 300) + (window.innerWidth/2 - 150) + 'px';
-            document.body.appendChild(f);
-            
-            // Random horizontal drift
-            f.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+            const flowers = ['🌸', '🌺', '🌻', '🌼', '🌷', '✨', '💖'];
+            const flower = document.createElement('div');
+            flower.className = 'flower-particle';
+            flower.innerText = flowers[Math.floor(Math.random() * flowers.length)];
+            flower.style.left = Math.random() * 100 + 'vw';
+            flower.style.top = '100vh';
+            document.body.appendChild(flower);
+
+            // Remove element after animation
+            setTimeout(() => flower.remove(), 4000);
         }
     </script>
 </body>
