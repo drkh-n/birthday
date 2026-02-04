@@ -213,13 +213,22 @@
             position: fixed;
             pointer-events: none;
             z-index: 200;
-            font-size: 30px;
+            /* Increased base size and added a shadow for depth */
+            font-size: 60px; 
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
             animation: floatUp 4s linear forwards;
         }
 
         @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+            0% { 
+                transform: translateY(0) translateX(0) rotate(0deg); 
+                opacity: 1; 
+            }
+            100% { 
+                /* The var(--drift) comes from the JS above */
+                transform: translateY(-110vh) translateX(var(--drift, 100px)) rotate(360deg); 
+                opacity: 0; 
+            }
         }
     </style>
 </head>
@@ -234,7 +243,7 @@
 
         <div class="card-container" id="card">
             <div class="panel left-panel">
-                <img src="https://via.placeholder.com/200" alt="Birthday Star">
+                <img src="photo.jpg" alt="Birthday Star">
                 <h2>Happy Birthday Wakonya!</h2>
                 <div class="date-tag">5th February</div>
             </div>
@@ -286,8 +295,17 @@
             const p = document.createElement('div');
             p.className = 'particle';
             p.innerText = items[Math.floor(Math.random() * items.length)];
+            
+            // --- NEW: Randomize Size ---
+            const randomSize = Math.floor(Math.random() * 60) + 40; // Sizes between 40px and 100px
+            p.style.fontSize = randomSize + 'px';
+            
             p.style.left = Math.random() * 100 + 'vw';
             p.style.top = '100vh';
+            
+            // Randomize horizontal drift for more "liveliness"
+            p.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+            
             document.body.appendChild(p);
             setTimeout(() => p.remove(), 4000);
         }
